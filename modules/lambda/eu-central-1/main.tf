@@ -58,15 +58,8 @@ module "lambda" {
     TABLE_NAME = var.table_author_name
   }
 
-  attach_policy_statements = true
-  policy_statements = {
-    dynamodb = {
-      effect    = "Allow",
-      actions   = ["dynamodb:Scan"],
-      resources = [var.table_author_arn]
-    }
-
-  }
+  create_role = false
+  lambda_role = var.lambda_courses_role_arn
 
   tags = module.label.tags
 }
@@ -111,6 +104,8 @@ module "lambda_get_course" {
     TABLE_NAME = var.table_courses_name
   }
 
+  create_role = false
+  lambda_role = var.lambda_courses_role_arn
 
   tags = module.label_get_course.tags
 }
@@ -127,6 +122,9 @@ module "lambda_save_course" {
     TABLE_NAME = var.table_courses_name
   }
 
+  create_role = false
+  lambda_role = var.lambda_courses_role_arn
+
   tags = module.label_save_course.tags
 }
 
@@ -142,6 +140,9 @@ module "lambda_update_course" {
     TABLE_NAME = var.table_courses_name
   }
 
+  create_role = false
+  lambda_role = var.lambda_courses_role_arn
+
   tags = module.label_update_course.tags
 }
 
@@ -156,6 +157,9 @@ module "lambda_delete_course" {
   environment_variables = {
     TABLE_NAME = var.table_courses_name
   }
+
+  create_role = false
+  lambda_role = var.lambda_courses_role_arn
 
   tags = module.label_delete_course.tags
 }
