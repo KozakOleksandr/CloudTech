@@ -1,6 +1,6 @@
 const AWS = require("aws-sdk");
 const dynamodb = new AWS.DynamoDB({
-  region: "<YOUR_AWS_REGION_CODE>",
+  region: process.env.AWS_REGION,
   apiVersion: "2012-08-10"
 });
 
@@ -11,7 +11,7 @@ exports.handler = (event, context, callback) => {
         S: event.id
       }
     },
-    TableName: "courses"
+    TableName: process.env.TABLE_NAME
   };
   dynamodb.getItem(params, (err, data) => {
     if (err) {

@@ -24,7 +24,6 @@ module "lambda_get_all_authors" {
   name_save_course        = "save-course"
   name_update_course      = "update-course"
   lambda_courses_role_arn = module.iam.table_courses_role_arn
-
 }
 
 module "iam" {
@@ -33,7 +32,6 @@ module "iam" {
   name              = "iam"
   table_author_arn  = module.author.table_arn
   table_courses_arn = module.course.table_arn
-
 }
 
 resource "aws_iam_user" "the-accounts" {
