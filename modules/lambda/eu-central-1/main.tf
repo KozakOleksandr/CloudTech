@@ -1,7 +1,6 @@
 module "label" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
-
   context = var.context
   name    = var.name
 }
@@ -9,7 +8,6 @@ module "label" {
 module "label_courses" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
-
   context = var.context
   name    = var.name_courses
 }
@@ -17,7 +15,6 @@ module "label_courses" {
 module "label_get_course" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
-
   context = var.context
   name    = var.name_get_course
 }
@@ -25,7 +22,6 @@ module "label_get_course" {
 module "label_save_course" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
-
   context = var.context
   name    = var.name_save_course
 }
@@ -33,7 +29,6 @@ module "label_save_course" {
 module "label_update_course" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
-
   context = var.context
   name    = var.name_update_course
 }
@@ -41,27 +36,34 @@ module "label_update_course" {
 module "label_delete_course" {
   source  = "cloudposse/label/null"
   version = "0.25.0"
-
   context = var.context
   name    = var.name_delete_course
 }
 
 module "lambda" {
-  source        = "terraform-aws-modules/lambda/aws"
-  version       = "4.18.0"
-  function_name = module.label.id
-  description   = "Get all authors"
-  handler       = "index.handler"
-  runtime       = "nodejs12.x"
-  source_path   = "${path.module}/lambda_src/get_all_authors/index.js"
-  environment_variables = {
-    TABLE_NAME = var.table_author_name
+    source      = "terraform-aws-modules/lambda/aws"
+    version     = "4.13.0"
+    function_name = module.label.id
+    description = "Get all authors"
+    handler     = "index.handler"
+    runtime = "nodejs12.x"
+    source_path = "${path.module}/lambda_src/get_all_authors/index.js"
+    environment_variables = {
+      TABLE_NAME = var.table_author_name
+    }
+
+    attach_policy_statements = true
+  policy_statements = {
+    dynamodb = {
+      effect    = "Allow",
+      actions   = ["dynamodb:Scan"],
+      resources = [var.table_author_arn]
+    }
+    
   }
 
-  create_role = false
-  lambda_role = var.lambda_courses_role_arn
+    tags        = module.label.tags
 
-  tags = module.label.tags
 }
 
 module "lambda_courses" {
@@ -78,17 +80,6 @@ module "lambda_courses" {
 
   create_role = false
   lambda_role = var.lambda_courses_role_arn
-
-  # attach_policy_statements = true
-  #   policy_statements = {
-  #     dynamodb = {
-  #       effect    = "Allow",
-  #       actions   = ["dynamodb:Scan"],
-  #       resources = [var.table_courses_arn]
-  #     }
-
-  #   }
-
   tags = module.label_courses.tags
 }
 
