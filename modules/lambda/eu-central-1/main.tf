@@ -46,7 +46,7 @@ module "lambda" {
     function_name = module.label.id
     description = "Get all authors"
     handler     = "index.handler"
-    runtime = "nodejs12.x"
+    runtime = "nodejs18.x"
     source_path = "${path.module}/lambda_src/get_all_authors/index.js"
     environment_variables = {
       TABLE_NAME = var.table_author_name
@@ -72,7 +72,7 @@ module "lambda_courses" {
   function_name = module.label_courses.id
   description   = "Get all courses"
   handler       = "index.handler"
-  runtime       = "nodejs12.x"
+  runtime       = "nodejs18.x"
   source_path   = "${path.module}/lambda_src/get_all_courses/index.js"
   environment_variables = {
     TABLE_NAME = var.table_courses_name
@@ -89,7 +89,7 @@ module "lambda_get_course" {
   function_name = module.label_get_course.id
   description   = "Get course"
   handler       = "index.handler"
-  runtime       = "nodejs12.x"
+  runtime       = "nodejs18.x"
   source_path   = "${path.module}/lambda_src/get_course/index.js"
   environment_variables = {
     TABLE_NAME = var.table_courses_name
@@ -107,7 +107,7 @@ module "lambda_save_course" {
   function_name = module.label_save_course.id
   description   = "Save course"
   handler       = "index.handler"
-  runtime       = "nodejs12.x"
+  runtime       = "nodejs18.x"
   source_path   = "${path.module}/lambda_src/save_course/index.js"
   environment_variables = {
     TABLE_NAME = var.table_courses_name
@@ -125,7 +125,7 @@ module "lambda_update_course" {
   function_name = module.label_update_course.id
   description   = "Update course"
   handler       = "index.handler"
-  runtime       = "nodejs12.x"
+  runtime       = "nodejs18.x"
   source_path   = "${path.module}/lambda_src/update_course/index.js"
   environment_variables = {
     TABLE_NAME = var.table_courses_name
@@ -143,7 +143,7 @@ module "lambda_delete_course" {
   function_name = module.label_delete_course.id
   description   = "Delete course"
   handler       = "index.handler"
-  runtime       = "nodejs12.x"
+  runtime       = "nodejs18.x"
   source_path   = "${path.module}/lambda_src/delete_course/index.js"
   environment_variables = {
     TABLE_NAME = var.table_courses_name

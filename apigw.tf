@@ -13,7 +13,19 @@ resource "aws_api_gateway_resource" "courses" {
   path_part   = "courses"
 }
 
-######################################################
+resource "aws_api_gateway_resource" "course" {
+  rest_api_id = aws_api_gateway_rest_api.this.id
+  parent_id   = aws_api_gateway_resource.courses.id
+  path_part   = "{id}"
+}
+
+resource "aws_api_gateway_resource" "authors" {
+  parent_id   = aws_api_gateway_rest_api.this.root_resource_id
+  path_part   = "authors"
+  rest_api_id = aws_api_gateway_rest_api.this.id
+}
+
+#######################################################
 
 resource "aws_api_gateway_method" "courses_get" {
   rest_api_id   = aws_api_gateway_rest_api.this.id
@@ -147,14 +159,6 @@ resource "aws_api_gateway_integration_response" "post_course" {
     "method.response.header.Access-Control-Allow-Methods" = "'GET,OPTIONS,POST,PUT'",
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
   }
-}
-
-#######################################################
-
-resource "aws_api_gateway_resource" "course" {
-  rest_api_id = aws_api_gateway_rest_api.this.id
-  parent_id   = aws_api_gateway_resource.courses.id
-  path_part   = "{id}"
 }
 
 #######################################################
@@ -347,12 +351,6 @@ resource "aws_api_gateway_integration_response" "course_get" {
 
 ##################################################################
 
-resource "aws_api_gateway_resource" "authors" {
-  parent_id   = aws_api_gateway_rest_api.this.root_resource_id
-  path_part   = "authors"
-  rest_api_id = aws_api_gateway_rest_api.this.id
-}
-
 resource "aws_api_gateway_method" "get_authors" {
   authorization = "NONE"
   http_method   = "GET"
@@ -404,6 +402,8 @@ resource "aws_api_gateway_integration_response" "get_authors" {
   }
 }
 
+##############################################################
+
 resource "aws_api_gateway_deployment" "this" {
   rest_api_id = aws_api_gateway_rest_api.this.id
 
@@ -426,4 +426,28 @@ resource "aws_api_gateway_request_validator" "this" {
   name                  = "validate_request_body"
   rest_api_id           = aws_api_gateway_rest_api.this.id
   validate_request_body = true
+}
+
+module "cors" {
+  source  = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id          = aws_api_gateway_rest_api.this.id
+  api_resource_id = aws_api_gateway_resource.authors.id
+}
+
+module "cors_courses" {
+  source  = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id          = aws_api_gateway_rest_api.this.id
+  api_resource_id = aws_api_gateway_resource.courses.id
+}
+
+module "cors_course" {
+  source  = "squidfunk/api-gateway-enable-cors/aws"
+  version = "0.3.3"
+
+  api_id          = aws_api_gateway_rest_api.this.id
+  api_resource_id = aws_api_gateway_resource.course.id
 }
