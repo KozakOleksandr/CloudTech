@@ -25,9 +25,6 @@ module "s3_bucket_frontend" {
   version = "3.9.0"
 
   bucket = format("%s-s3-cloudfront-tf-kozak", module.label.id)
-  # acl    = "private"
-  # control_object_ownership = true
-  # object_ownership         = "ObjectWriter"
 
   versioning = {
     enabled = false
